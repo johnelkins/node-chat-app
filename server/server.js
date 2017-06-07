@@ -29,12 +29,7 @@ io.on('connection', (socket) => {
     socket.on('createMessage', (message, callback) => {
         console.log('newMessage', message);
         io.emit('newMessage', generateMessage(message.from, message.text));
-        callback('This is from the server.');
-        // socket.broadcast.emit('newMessage', {
-        //     from: message.from,
-        //     text: message.text,
-        //     createdAt: new Date().getTime()
-        // })
+        callback();
     });
 
     socket.on('createLocationMessage', (coords) => {

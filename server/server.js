@@ -37,6 +37,11 @@ io.on('connection', (socket) => {
         // })
     });
 
+    socket.on('createLocationMessage', (coords) => {
+        console.log(coords);
+        io.emit('newMessage', generateMessage('Admin', `${coords.latitude}, ${coords.longitude}`));
+    });
+
     socket.on('disconnect', () => {
         console.log('User was disconnected.');
     });

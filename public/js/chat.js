@@ -73,8 +73,6 @@
  //  });
 
  socket.on('newLocationMessage', function(message) {
-     console.log('ifired');
-
      var formattedTime = moment(message.createdAt).format('h:mm a');
      var template = $('#location-message-template').html();
      var html = Mustache.render(template, {
@@ -103,11 +101,10 @@
  //      console.log(data);
  //  });
 
- jQuery('#message-form').on('submit', function(e) {
+ $('#message-form').on('submit', function(e) {
      e.preventDefault();
      var messageTextBox = $('[name=message]');
      socket.emit('createMessage', {
-         from: 'User',
          text: messageTextBox.val()
      }, function() {
          messageTextBox.val('');

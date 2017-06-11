@@ -18,16 +18,36 @@
  }
 
  socket.on('connect', function() {
-     console.log('connected');
+     console.log('Connected to server');
+     var params = $.deparam(window.location.search);
+
+     socket.emit('join', params, function(err) {
+         if (err) {
+             alert(err);
+             window.location.href = '/';
+         } else {
+             console.log('No error');
+         }
+     });
  });
 
  socket.on('disconnect', function() {
      console.log('Disconnected from server.');
  });
 
+ socket.on('updateUserList', function(users) {
+     var ol = $('<ol></ol>');
+
+     users.forEach(function(user) {
+         ol.append($('<li></li>').text(user));
+     });
+
+     $('#users').html(ol);
+ });
+
  socket.on('newMessage', function(message) {
      var formattedTime = moment(message.createdAt).format('h:mm a');
-     var template = jQuery('#message-template').html();
+     var template = $('#message-template').html();
      var html = Mustache.render(template, {
          text: message.text,
          from: message.from,
@@ -48,15 +68,15 @@
      console.log('Welcome message', message);
  });
 
- socket.on('newUserMessage', function(message) {
-     console.log('Message from the Admin', message);
- });
+ //  socket.on('newUserMessage', function(message) {
+ //      console.log('Message from the Admin', message);
+ //  });
 
  socket.on('newLocationMessage', function(message) {
      console.log('ifired');
 
      var formattedTime = moment(message.createdAt).format('h:mm a');
-     var template = jQuery('#location-message-template').html();
+     var template = $('#location-message-template').html();
      var html = Mustache.render(template, {
          from: message.from,
          url: message.url,
@@ -85,7 +105,7 @@
 
  jQuery('#message-form').on('submit', function(e) {
      e.preventDefault();
-     var messageTextBox = jQuery('[name=message]');
+     var messageTextBox = $('[name=message]');
      socket.emit('createMessage', {
          from: 'User',
          text: messageTextBox.val()
@@ -94,7 +114,7 @@
      });
  });
 
- var locationButton = jQuery('#send-location');
+ var locationButton = $('#send-location');
 
  locationButton.on('click', function() {
      //alert('ifired');
